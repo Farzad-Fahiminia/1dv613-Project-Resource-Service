@@ -60,7 +60,8 @@ export class ResourceController {
  */
   async getAllRecords (req, res, next) {
     try {
-      const records = await Record.find({ userId: req.user.id })
+      // const records = await Record.find({ userId: req.user.id })
+      const records = await Record.find()
       if (records !== null) {
         res.status(200).send(records)
       } else {
@@ -75,35 +76,39 @@ export class ResourceController {
     }
   }
 
-// /**
-//  * Get specific image.
-//  *
-//  * @param {object} req - Express request object.
-//  * @param {object} res - Express response object.
-//  * @param {Function} next - Express next middleware function.
-//  */
-//   async getRecord (req, res, next) {
-//     try {
-//       const record = await Record.find({ recordId: req.params.id })
-//       if (req.user.id === record[0].userId) {
-//         if (record.length > 0 && record !== null) {
-//           res.status(200).send(record)
-//         } else {
-//           next(createError(404, 'The requested resource was not found.'))
-//         }
-//       } else {
-//         next(createError(403, 'The request contained valid data and was understood by the server, but the server is refusing action due to the authenticated user not having the necessary permissions for the resource.'))
-//       }
-//     } catch (error) {
-//       const err = createError(500, 'An unexpected condition was encountered.')
-//       err.cause = error
+/**
+ * Get specific record.
+ *
+ * @param {object} req - Express request object.
+ * @param {object} res - Express response object.
+ * @param {Function} next - Express next middleware function.
+ */
+  async getRecord (req, res, next) {
+    console.log(req.params.id)
+    try {
+      const record = await Record.findById(req.params.id)
+      console.log('Kommer vi in hit?')
+      console.log(record.id)
+      // if (req.user.id === record[0].userId) {
+        if (record.id.length > 0 && record.id !== null) {
+          console.log('Kommer vi in i if-statsen?')
+          res.status(200).send(record)
+        } else {
+          next(createError(404, 'The requested resource was not found.'))
+        }
+      // } else {
+      //   next(createError(403, 'The request contained valid data and was understood by the server, but the server is refusing action due to the authenticated user not having the necessary permissions for the resource.'))
+      // }
+    } catch (error) {
+      const err = createError(500, 'An unexpected condition was encountered.')
+      err.cause = error
 
-//       next(err)
-//     }
-//   }
+      next(err)
+    }
+  }
 
 /**
- * Post images.
+ * Post record.
  *
  * @param {object} req - Express request object.
  * @param {object} res - Express response object.
@@ -111,17 +116,12 @@ export class ResourceController {
  */
   async addRecord (req, res, next) {
     console.log('add record')
-    // console.log(req.body)
-    // console.log(req.body.recordId)
-    // console.log(req.body.artist)
-    // console.log(req.body.recordTitle)
-    // console.log(req.body.recordYear)
     try {
       const record = new Record({
-        recordId: req.body.recordId,
         artist: req.body.artist,
         recordTitle: req.body.recordTitle,
-        recordYear: req.body.recordYear
+        releaseYear: req.body.releaseYear,
+        format: req.body.format
       })
 
       await record.save()

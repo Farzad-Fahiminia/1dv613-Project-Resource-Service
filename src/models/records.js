@@ -9,11 +9,6 @@ import mongoose from 'mongoose'
 
 // Create a schema.
 const schema = new mongoose.Schema({
-  recordId: {
-    type: String,
-    required: true,
-    immutable: true
-  },
   artist: {
     type: String,
     required: true
@@ -22,7 +17,11 @@ const schema = new mongoose.Schema({
     type: String,
     required: true
   },
-  recordYear: {
+  releaseYear: {
+    type: String,
+    required: true
+  },
+  format: {
     type: String,
     required: true
   },
