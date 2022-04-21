@@ -90,12 +90,12 @@ export class ResourceController {
       console.log('Kommer vi in hit?')
       console.log(record.id)
       // if (req.user.id === record[0].userId) {
-        if (record.id.length > 0 && record.id !== null) {
-          console.log('Kommer vi in i if-statsen?')
-          res.status(200).send(record)
-        } else {
-          next(createError(404, 'The requested resource was not found.'))
-        }
+      if (record.id.length > 0 && record.id !== null) {
+        console.log('Kommer vi in i if-statsen?')
+        res.status(200).send(record)
+      } else {
+        next(createError(404, 'The requested resource was not found.'))
+      }
       // } else {
       //   next(createError(403, 'The request contained valid data and was understood by the server, but the server is refusing action due to the authenticated user not having the necessary permissions for the resource.'))
       // }
@@ -260,31 +260,31 @@ export class ResourceController {
 //   }
 // }
 
-// /**
-//  * Delete specific image.
-//  *
-//  * @param {object} req - Express request object.
-//  * @param {object} res - Express response object.
-//  * @param {Function} next - Express next middleware function.
-//  */
-// async deleteRecord (req, res, next) {
-//   try {
-//     const record = await Record.find({ recordId: req.params.id })
-//     if (req.user.id === record[0].userId) {
-//       if (record !== null) {
-//         await Record.findByIdAndDelete(record[0])
-//         res.status(204).send('Image has been deleted!')
-//       } else {
-//         next(createError(404, 'The requested resource was not found.'))
-//       }
-//     } else {
-//       next(createError(403, 'The request contained valid data and was understood by the server, but the server is refusing action due to the authenticated user not having the necessary permissions for the resource.'))
-//     }
-//   } catch (error) {
-//     const err = createError(500, 'An unexpected condition was encountered.')
-//     err.cause = error
+/**
+ * Delete specific image.
+ *
+ * @param {object} req - Express request object.
+ * @param {object} res - Express response object.
+ * @param {Function} next - Express next middleware function.
+ */
+  async deleteRecord (req, res, next) {
+    try {
+      const record = await Record.findById(req.params.id)
+      // if (req.user.id === record[0].userId) {
+      if (record !== null) {
+        await Record.findByIdAndDelete(record)
+        res.status(204).send('Image has been deleted!')
+      } else {
+        next(createError(404, 'The requested resource was not found.'))
+      }
+      // } else {
+      //   next(createError(403, 'The request contained valid data and was understood by the server, but the server is refusing action due to the authenticated user not having the necessary permissions for the resource.'))
+      // }
+    } catch (error) {
+      const err = createError(500, 'An unexpected condition was encountered.')
+      err.cause = error
 
-//     next(err)
-//   }
-// }
+      next(err)
+    }
+  }
 }
