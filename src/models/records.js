@@ -25,6 +25,10 @@ const schema = new mongoose.Schema({
     type: String,
     required: true
   },
+  coverURL: {
+    type: String,
+    required: true
+  },
   userId: {
     type: String,
     immutable: true
