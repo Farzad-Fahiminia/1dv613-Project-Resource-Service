@@ -14,13 +14,13 @@ const controller = new ResourceController()
 
 // Map HTTP verbs and route paths to controller actions.
 
-router.get('/records', (req, res, next) => controller.getAllRecords(req, res, next))
-router.get('/records/:id', (req, res, next) => controller.getRecord(req, res, next))
+router.get('/records', (req, res, next) => controller.authenticate(req, res, next), (req, res, next) => controller.getAllRecords(req, res, next))
+router.get('/records/:id', (req, res, next) => controller.authenticate(req, res, next), (req, res, next) => controller.getRecord(req, res, next))
 
-router.post('/records', (req, res, next) => controller.addRecord(req, res, next))
-router.put('/records/:id', (req, res, next) => controller.putRecord(req, res, next))
-router.patch('/records/:id', (req, res, next) => controller.patchRecord(req, res, next))
-router.delete('/records/:id', (req, res, next) => controller.deleteRecord(req, res, next))
+router.post('/records', (req, res, next) => controller.authenticate(req, res, next), (req, res, next) => controller.addRecord(req, res, next))
+router.put('/records/:id', (req, res, next) => controller.authenticate(req, res, next), (req, res, next) => controller.putRecord(req, res, next))
+router.patch('/records/:id', (req, res, next) => controller.authenticate(req, res, next), (req, res, next) => controller.patchRecord(req, res, next))
+router.delete('/records/:id', (req, res, next) => controller.authenticate(req, res, next), (req, res, next) => controller.deleteRecord(req, res, next))
 
 // router.get('/images', (req, res, next) => controller.authenticateJWT(req, res, next), (req, res, next) => controller.getAllImages(req, res, next))
 // router.get('/images/:id', (req, res, next) => controller.authenticateJWT(req, res, next), (req, res, next) => controller.getImage(req, res, next))

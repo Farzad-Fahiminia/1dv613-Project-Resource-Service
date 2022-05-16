@@ -9,50 +9,59 @@
 // import fetch from 'node-fetch'
 import createError from 'http-errors'
 import { Record } from '../../models/records.js'
+import { initializeApp } from 'firebase-admin/app'
+import { getAuth } from 'firebase-admin/auth'
+import firebase from 'firebase-admin'
+import firebaseConfig from '../../config/firebase-config.js'
 
 /**
  * Encapsulates a controller.
  */
 export class ResourceController {
-//   /**
-//    * Authenticates requests.
-//    *
-//    * If authentication is successful, `req.user`is populated and the
-//    * request is authorized to continue.
-//    * If authentication fails, an unauthorized response will be sent.
-//    *
-//    * @param {object} req - Express request object.
-//    * @param {object} res - Express response object.
-//    * @param {Function} next - Express next middleware function.
-//    */
-// authenticateJWT = (req, res, next) => {
-//   try {
-//     const publicKey = Buffer.from(process.env.ACCESS_TOKEN_SECRET, 'base64')
-//     const [authenticationScheme, token] = req.headers.authorization?.split(' ')
+  /**
+   * Authenticates requests.
+   *
+   * If authentication is successful, `req.user`is populated and the
+   * request is authorized to continue.
+   * If authentication fails, an unauthorized response will be sent.
+   *
+   * @param {object} req - Express request object.
+   * @param {object} res - Express response object.
+   * @param {Function} next - Express next middleware function.
+   */
+  async authenticate (req, res, next) {
+    try {
+      // console.log('HELLO AUTH')
+      // console.log(req.headers.authorization)
+      if (firebase.apps.length === 0) {
+        initializeApp({
+          credential: firebase.credential.cert(firebaseConfig)
+        })
+        console.log(req.headers.authorization)
+      }
 
-  //     if (authenticationScheme !== 'Bearer') {
-  //       next(createError(400, 'The request cannot or will not be processed due to something that is perceived to be a client error (for example, validation error).'))
-  //     }
+      console.log('!!!!!!!!!!!!!!!')
 
-  //     const payload = jwt.verify(token, publicKey)
-  //     req.user = {
-  //       username: payload.sub,
-  //       firstName: payload.given_name,
-  //       lastName: payload.family_name,
-  //       email: payload.email,
-  //       id: payload.id
-  //     }
+      const header = req.headers?.authorization
 
-  //     next()
-  //   } catch (err) {
-  //     const error = createError(401)
-  //     error.cause = err
-  //     next(error)
-  //   }
-  // }
+      if (header !== 'Bearer null' && req.headers?.authorization?.startsWith('Bearer ')) {
+        console.log('HÄÄÄÄÄR')
+        const idToken = req.headers.authorization.split('Bearer ')[1]
+        const decodedToken = await getAuth().verifyIdToken(idToken)
+        console.log(decodedToken)
+      }
+
+      next()
+    } catch (err) {
+      console.log(err)
+      const error = createError(401)
+      error.cause = err
+      next(error)
+    }
+  }
 
   /**
-   * Get images.
+   * Get records.
    *
    * @param {object} req - Express request object.
    * @param {object} res - Express response object.
@@ -60,6 +69,7 @@ export class ResourceController {
    */
   async getAllRecords (req, res, next) {
     try {
+      console.log('GET ALL RECORDS!')
       // const records = await Record.find({ userId: req.user.id })
       const records = await Record.find()
       if (records !== null) {
@@ -84,8 +94,10 @@ export class ResourceController {
    * @param {Function} next - Express next middleware function.
    */
   async getRecord (req, res, next) {
+    console.log('SPECIFIK SKIVA!')
     try {
       const record = await Record.findById(req.params.id)
+      console.log(req.params.id)
       // if (req.user.id === record[0].userId) {
       if (record.id.length > 0 && record.id !== null) {
         res.status(200).send(record)
@@ -96,6 +108,7 @@ export class ResourceController {
       //   next(createError(403, 'The request contained valid data and was understood by the server, but the server is refusing action due to the authenticated user not having the necessary permissions for the resource.'))
       // }
     } catch (error) {
+      console.log(error)
       const err = createError(500, 'An unexpected condition was encountered.')
       err.cause = error
 
@@ -121,13 +134,12 @@ export class ResourceController {
         coverURL: req.body.coverURL
       })
 
-      console.log(record)
-
       await record.save()
       res.sendStatus(201)
     } catch (error) {
       console.log(error)
     }
+
     // try {
     //   if (req.body.data === undefined || req.body.contentType === undefined) {
     //     next(createError(400, 'The request cannot or will not be processed due to something that is perceived to be a client error (for example, validation error).'))
