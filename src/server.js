@@ -32,7 +32,17 @@ try {
 
   // Error handler.
   app.use(function (err, req, res, next) {
+    console.log(err.status)
     err.status = err.status || 500
+
+    if (err.status === 401) {
+      return res
+        .status(401)
+        .json({
+          status_code: 401,
+          message: 'Access token invalid or not provided.'
+        })
+    }
 
     if (req.app.get('env') !== 'development') {
       return res

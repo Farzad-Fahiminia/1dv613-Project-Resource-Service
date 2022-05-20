@@ -14,8 +14,8 @@ const controller = new ResourceController()
 
 // Map HTTP verbs and route paths to controller actions.
 
-router.get('/records', (req, res, next) => controller.authenticate(req, res, next), (req, res, next) => controller.getAllRecords(req, res, next))
-router.get('/records/:id', (req, res, next) => controller.authenticate(req, res, next), (req, res, next) => controller.getRecord(req, res, next))
+router.get('/records', (req, res, next) => controller.getAllRecords(req, res, next))
+router.get('/records/:id', (req, res, next) => controller.getRecord(req, res, next))
 
 router.post('/records', (req, res, next) => controller.authenticate(req, res, next), (req, res, next) => controller.addRecord(req, res, next))
 router.put('/records/:id', (req, res, next) => controller.authenticate(req, res, next), (req, res, next) => controller.putRecord(req, res, next))

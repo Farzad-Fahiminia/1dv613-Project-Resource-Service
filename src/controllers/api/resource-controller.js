@@ -49,13 +49,19 @@ export class ResourceController {
         const idToken = req.headers.authorization.split('Bearer ')[1]
         const decodedToken = await getAuth().verifyIdToken(idToken)
         console.log(decodedToken)
+        next()
+      } else {
+        const error = createError(401)
+        next(error)
       }
-
-      next()
     } catch (err) {
       console.log(err)
-      const error = createError(401)
-      error.cause = err
+      let error = err
+      if (err.code === 'auth/argument-error' || err.code === 'auth/id-token-expired') {
+        error = createError(401)
+      }
+      // const error = createError(401)
+      // error.cause = err
       next(error)
     }
   }
