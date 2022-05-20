@@ -49,8 +49,9 @@ export class ResourceController {
         const idToken = req.headers.authorization.split('Bearer ')[1]
         const decodedToken = await getAuth().verifyIdToken(idToken)
         console.log(decodedToken)
-        next()
       }
+
+      next()
     } catch (err) {
       console.log(err)
       const error = createError(401)
