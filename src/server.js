@@ -56,6 +56,13 @@ try {
           status_code: 404,
           message: 'The requested resource was not found.'
         })
+    } else if (err.status === 500) {
+      return res
+        .status(500)
+        .json({
+          status_code: 500,
+          message: 'An unexpected condition was encountered.'
+        })
     }
 
     if (req.app.get('env') !== 'development') {
