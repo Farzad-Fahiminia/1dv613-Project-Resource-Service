@@ -32,7 +32,6 @@ try {
 
   // Error handler.
   app.use(function (err, req, res, next) {
-    console.log(err.status)
     err.status = err.status || 500
 
     if (err.status === 401) {
