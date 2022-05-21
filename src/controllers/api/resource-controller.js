@@ -147,7 +147,7 @@ export class ResourceController {
           coverURL: req.body.coverURL
         }
 
-        const newRecordData = await Record.findByIdAndUpdate(record, recordObj, { runValidators: true })
+        const newRecordData = await Record.findByIdAndUpdate(req.params.id, recordObj, { runValidators: true })
         await newRecordData.save()
 
         res.sendStatus(204)
