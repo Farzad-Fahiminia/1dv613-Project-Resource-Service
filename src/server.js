@@ -42,6 +42,20 @@ try {
           status_code: 401,
           message: 'Access token invalid or not provided.'
         })
+    } else if (err.status === 403) {
+      return res
+        .status(403)
+        .json({
+          status_code: 403,
+          message: 'The request contained valid data and was understood by the server, but the server is refusing action due to the authenticated user not having the necessary permissions for the resource.'
+        })
+    } else if (err.status === 404) {
+      return res
+        .status(404)
+        .json({
+          status_code: 404,
+          message: 'The requested resource was not found.'
+        })
     }
 
     if (req.app.get('env') !== 'development') {

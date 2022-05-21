@@ -17,15 +17,14 @@ const controller = new ResourceController()
 router.get('/records', (req, res, next) => controller.getAllRecords(req, res, next))
 router.get('/records/:id', (req, res, next) => controller.getRecord(req, res, next))
 
-router.post('/records', (req, res, next) => controller.authenticate(req, res, next), (req, res, next) => controller.addRecord(req, res, next))
-router.put('/records/:id', (req, res, next) => controller.authenticate(req, res, next), (req, res, next) => controller.putRecord(req, res, next))
-router.patch('/records/:id', (req, res, next) => controller.authenticate(req, res, next), (req, res, next) => controller.patchRecord(req, res, next))
-router.delete('/records/:id', (req, res, next) => controller.authenticate(req, res, next), (req, res, next) => controller.deleteRecord(req, res, next))
+router.post('/records',
+  (req, res, next) => controller.authenticate(req, res, next),
+  (req, res, next) => controller.addRecord(req, res, next))
 
-// router.get('/images', (req, res, next) => controller.authenticateJWT(req, res, next), (req, res, next) => controller.getAllImages(req, res, next))
-// router.get('/images/:id', (req, res, next) => controller.authenticateJWT(req, res, next), (req, res, next) => controller.getImage(req, res, next))
+router.patch('/records/:id',
+  (req, res, next) => controller.authenticate(req, res, next),
+  (req, res, next) => controller.patchRecord(req, res, next))
 
-// router.post('/images', (req, res, next) => controller.authenticateJWT(req, res, next), (req, res, next) => controller.addImage(req, res, next))
-// router.put('/images/:id', (req, res, next) => controller.authenticateJWT(req, res, next), (req, res, next) => controller.putImage(req, res, next))
-// router.patch('/images/:id', (req, res, next) => controller.authenticateJWT(req, res, next), (req, res, next) => controller.patchImage(req, res, next))
-// router.delete('/images/:id', (req, res, next) => controller.authenticateJWT(req, res, next), (req, res, next) => controller.deleteImage(req, res, next))
+router.delete('/records/:id',
+  (req, res, next) => controller.authenticate(req, res, next),
+  (req, res, next) => controller.deleteRecord(req, res, next))
